@@ -40,7 +40,6 @@ conn_dimensional = mysql.connector.connect(
 cursor_relacional = conn_relacional.cursor()
 cursor_dimensional = conn_dimensional.cursor()
 
-# Selects
 cursor_relacional.execute(
     "SELECT idPais, nmPais FROM pais"
 )
@@ -59,11 +58,10 @@ cidades = cursor_relacional.fetchall()
 continentes = []
 for id_pais, nome_pais in paises:
     continentes.append(pais_para_continente(nome_pais))
-    
+
 # Inserts
 cursor_dimensional.executemany(
     "INSERT INTO d_localidade (idLocalidade, pais, estado, cidade, continente) VALUES (%s, %s, %s, %s, %s)",
-    [(i+1, paises[i][1], estados[i][1], cidades[i][1], continentes[i]) for i in range(len(paises))],
+    [(i+1, paises[0][1], estados[i][1], cidades[i][1], continentes[0]) for i in range(len(estados))],
 )
-
 conn_dimensional.commit()

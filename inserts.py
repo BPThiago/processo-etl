@@ -91,8 +91,8 @@ for i in range(1, 6):
     )
 
     # Assinatura insert
-    dt_inicio_assinatura = fake.date_between(start_date='-10y', end_date='-5y')
-    dt_fim_assinatura = fake.date_between(start_date=dt_inicio_assinatura, end_date='-5y')
+    dt_inicio_assinatura = fake.date_between(start_date='-12y', end_date='-7y')
+    dt_fim_assinatura = fake.date_between(start_date=dt_inicio_assinatura, end_date='-7y')
     situacao = fake.random_element(elements=(1, 2))
     cursor_relacional.execute(
         "INSERT INTO assinatura (idAssinatura, dtInicio, dtFim, Usuario_idUsuario, Plano_idPlano, SituacaoAssinatura_idSituacao) VALUES (%s, %s, %s, %s, %s, %s)",
