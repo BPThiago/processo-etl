@@ -1,3 +1,4 @@
 mysql-connector-python==9.3.0
 pandas==2.2.3
 Faker==37.3.0
+xlrd==2.0.1
