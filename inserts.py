@@ -9,16 +9,7 @@ conn_relacional = mysql.connector.connect(
     database="relacional",
 )
 
-conn_dimensional = mysql.connector.connect(
-    host="127.0.0.1",
-    port=3306,
-    user="root",
-    password="0101",
-    database="dimensional",
-)
-
 cursor_relacional = conn_relacional.cursor()
-cursor_dimensional = conn_dimensional.cursor()
 
 # Qualidade video insert
 
@@ -59,7 +50,7 @@ cursor_relacional.executemany(
 
 fake = Faker('pt_BR')
 
-for i in range(1, 6):
+for i in range(1, 101):
     # Pais, estado, cidade insert]
     pais = fake.country()
     estado = fake.state()
@@ -95,14 +86,15 @@ for i in range(1, 6):
     dt_inicio_assinatura = fake.date_between(start_date='-12y', end_date='-7y')
     dt_fim_assinatura = fake.date_between(start_date=dt_inicio_assinatura, end_date='-7y')
     situacao = fake.random_element(elements=(1, 2))
+    plano_escolhido = fake.random_element(elements=(1, 2, 3, 4, 5))
     cursor_relacional.execute(
         "INSERT INTO assinatura (idAssinatura, dtInicio, dtFim, Usuario_idUsuario, Plano_idPlano, SituacaoAssinatura_idSituacao) VALUES (%s, %s, %s, %s, %s, %s)",
-        (i, dt_inicio_assinatura, dt_fim_assinatura, i, i, situacao)
+        (i, dt_inicio_assinatura, dt_fim_assinatura, i, plano_escolhido, situacao)
     )
 
     # Pagamento insert
     dt_pagamento = fake.date_between(start_date=dt_inicio_assinatura, end_date=dt_fim_assinatura)
-    valor_recebido = planos[i-1][2]
+    valor_recebido = planos[plano_escolhido-1][2]
     cursor_relacional.execute(
         "INSERT INTO pagamento (idPagamento, dtPagamento, vlrRecebido, Assinatura_idAssinatura) VALUES (%s, %s, %s, %s)",
         (i, dt_pagamento, valor_recebido, i)
