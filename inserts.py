@@ -20,12 +20,6 @@ conn_dimensional = mysql.connector.connect(
 cursor_relacional = conn_relacional.cursor()
 cursor_dimensional = conn_dimensional.cursor()
 
-# Pais insert
-cursor_relacional.execute(
-    "INSERT INTO pais (idPais, nmPais) VALUES (%s, %s)",
-    (1, 'Brasil',)
-)
-
 # Qualidade video insert
 
 qualidade_video = [
@@ -66,9 +60,16 @@ cursor_relacional.executemany(
 fake = Faker('pt_BR')
 
 for i in range(1, 6):
-    # Estado e cidade insert
+    # Pais, estado, cidade insert]
+    pais = fake.country()
     estado = fake.state()
     cidade = fake.city()
+
+    # Pais insert
+    cursor_relacional.execute(
+        "INSERT INTO pais (idPais, nmPais) VALUES (%s, %s)",
+        (i, pais)
+    )
 
     cursor_relacional.execute(
         "INSERT INTO estado (idEstado, nmEstado) VALUES (%s, %s)",
@@ -87,7 +88,7 @@ for i in range(1, 6):
     sexo_usuario = fake.random_element(elements=('M', 'F'))
     cursor_relacional.execute(
         "INSERT INTO usuario (idUsuario, nome, email, dtNascimento, sexo, pais_idPais, cidade_idCidade, estado_idEstado) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
-        (i, nome_usuario, email_usuario, dt_nascimento_usuario, sexo_usuario, 1, i, i)
+        (i, nome_usuario, email_usuario, dt_nascimento_usuario, sexo_usuario, i, i, i)
     )
 
     # Assinatura insert
@@ -108,28 +109,3 @@ for i in range(1, 6):
     )
 
 conn_relacional.commit()
-'''
-    # Função insert
-    desc = fake.random_element(elements=('Câmera', 'Compositor', 'Ator', 'Diretor', 'Produtor', "Roterista", "Editor"))
-    cursor_relacional.execute(
-        "INSERT INTO funcao (idFuncao, descFuncao) VALUES (%s, %s)",
-        (i, desc,)
-    )
-
-    # Artista insert
-    nome_artista = fake.name()
-    cursor_relacional.execute(
-        "INSERT INTO artista (idArtista, nmArtista) VALUES (%s, %s)",
-        (i, nome_artista,)   
-    )
-    
-    cursor_relacional.execute(
-        "INSERT INTO artistaconteudo (Artista_idArtista, Conteudo_idConteudo, )"
-    )
-'''
-    
-        
-    
-    
-    
-    
