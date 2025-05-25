@@ -12,7 +12,6 @@ conn_relacional = mysql.connector.connect(
 cursor_relacional = conn_relacional.cursor()
 
 # Qualidade video insert
-
 qualidade_video = [
     (1, 'SD'),
     (2, 'HD'),
@@ -50,8 +49,11 @@ cursor_relacional.executemany(
 
 fake = Faker('pt_BR')
 
-for i in range(1, 101):
-    # Pais, estado, cidade insert]
+localidades_ids = []
+
+# Criando buffer de pais, estado e cidade
+for i in range(1, 6):
+    # Pais, estado, cidade insert
     pais = fake.country()
     estado = fake.state()
     cidade = fake.city()
@@ -62,24 +64,29 @@ for i in range(1, 101):
         (i, pais)
     )
 
+    # Estado insert
     cursor_relacional.execute(
         "INSERT INTO estado (idEstado, nmEstado) VALUES (%s, %s)",
         (i, estado)
     )
 
+    # Cidade insert
     cursor_relacional.execute(
         "INSERT INTO cidade (idCidade, nmCidade) VALUES (%s, %s)",
         (i, cidade)
     )
-    
+    localidades_ids.append(i)
+
+for i in range(1, 101):
     # Usuario insert
     nome_usuario = fake.name()
     email_usuario = fake.email()
-    dt_nascimento_usuario = fake.date_of_birth(minimum_age=18, maximum_age=80)
+    dt_nascimento_usuario = fake.date_of_birth(minimum_age=18, maximum_age=40) # Limitar um pouco a faixa etária :D
     sexo_usuario = fake.random_element(elements=('M', 'F'))
+    localidade_selecionada = fake.random_element(elements=localidades_ids)
     cursor_relacional.execute(
         "INSERT INTO usuario (idUsuario, nome, email, dtNascimento, sexo, pais_idPais, cidade_idCidade, estado_idEstado) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
-        (i, nome_usuario, email_usuario, dt_nascimento_usuario, sexo_usuario, i, i, i)
+        (i, nome_usuario, email_usuario, dt_nascimento_usuario, sexo_usuario, localidade_selecionada, localidade_selecionada, localidade_selecionada)
     )
 
     # Assinatura insert
